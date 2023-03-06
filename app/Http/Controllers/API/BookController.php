@@ -65,6 +65,8 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $book = Book::findOrFail($id);
+        $book->delete();
+        return new BookResource($book->loadMissing('user:id,username'));
     }
 }
