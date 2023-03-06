@@ -29,7 +29,7 @@ class BookController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:100',
             'description' => 'max:1000',
-        ]); // header request => Accept = application/json
+        ]); // header request => Accept = application/json and use raw->json input in postman
         $validated['user_id'] = Auth::user()->id;
         // $validated['user_id'] = 1;
         $book = Book::create($validated);
@@ -42,12 +42,8 @@ class BookController extends Controller
     public function show(string $id)
     {
         // return Book::with('user')->findOrfail($id);
-        $book = Book::with('user:id,username')->find($id);
-        if(empty($book)){
-            return response()->json("Data not found", 404);
-        }else{
-            return new BookResource($book);
-        }
+        $book = Book::with('user:id,username')->findOrFail($id);
+        return new BookResource($book);
     }
 
     /**
@@ -55,7 +51,13 @@ class BookController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'max:100',
+            'description' => 'max:1000',
+        ]);
+        $book = Book::findOrFail($id);
+        $book->update($validated);
+        return new BookResource($book->loadMissing('user:id,username'));
     }
 
     /**
