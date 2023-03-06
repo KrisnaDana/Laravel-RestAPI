@@ -17,7 +17,7 @@ class BooksResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->user->username,
-            'created_at' => $this->created_at,
+            'user' => $this->whenLoaded('user'),
         ];
     }
 }
