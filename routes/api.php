@@ -21,12 +21,11 @@ Route::post('/login', [UserController::class, 'login']);
 Route::get('/logout', [UserController::class, 'logout']);
 Route::get('/me', [UserController::class, 'me']);
 
-
 Route::get('/books', [BookController::class, 'index']);
-Route::get('/book/{id}', [UserController::class, 'show']);
-Route::post('/book', [UserController::class, 'store']);
-Route::patch('/book/{id}', [UserController::class, 'update']);
-Route::delete('/book/{id}', [UserController::class, 'destroy']);
+Route::get('/book/{id}', [BookController::class, 'show']);
+Route::post('/book', [BookController::class, 'store']);
+Route::patch('/book/{id}', [BookController::class, 'update']);
+Route::delete('/book/{id}', [BookController::class, 'destroy']);
 
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

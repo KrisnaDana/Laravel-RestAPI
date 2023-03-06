@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookCollection;
 use Illuminate\Http\Request;
+use App\Models\Book;
+use App\Http\Resources\BookResource;
 
 class BookController extends Controller
 {
@@ -12,7 +15,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        return "p";
+        return new BookCollection(Book::all());
     }
 
     /**
@@ -28,7 +31,8 @@ class BookController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // return Book::with('user')->findOrfail($id);
+        return new BookResource(Book::with('user:id,username')->findOrfail($id));
     }
 
     /**
