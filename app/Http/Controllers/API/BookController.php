@@ -7,6 +7,7 @@ use App\Http\Resources\BookCollection;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Http\Resources\BookResource;
+use App\Http\Resources\BooksResource;
 
 class BookController extends Controller
 {
@@ -15,7 +16,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        return new BookCollection(Book::all());
+        $books = Book::with('user:id,username')->all();
+        return BooksResource::collection($books);
     }
 
     /**
@@ -32,7 +34,12 @@ class BookController extends Controller
     public function show(string $id)
     {
         // return Book::with('user')->findOrfail($id);
-        return new BookResource(Book::with('user:id,username')->findOrfail($id));
+        $book = Book::with('user:id,username')->find($id);
+        if(empty($book)){
+            return response()->json("Data not found", 404);
+        }else{
+            return new BookResource($book);
+        }
     }
 
     /**
