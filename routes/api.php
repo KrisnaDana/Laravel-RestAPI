@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\BookController;
+use App\Http\Middleware\BookMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,16 +16,20 @@ use App\Http\Controllers\API\BookController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::middleware(['throttle:60,1'])->group(function() {
+    Route::post('/login', [UserController::class, 'login']);
 
-Route::post('/login', [UserController::class, 'login']);
-Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
-Route::get('/me', [UserController::class, 'me'])->middleware('auth:sanctum');
-
-Route::get('/books', [BookController::class, 'index'])->middleware('auth:sanctum');
-Route::get('/book/{id}', [BookController::class, 'show'])->middleware('auth:sanctum');
-Route::post('/book', [BookController::class, 'store'])->middleware('auth:sanctum');
-Route::patch('/book/{id}', [BookController::class, 'update'])->middleware('auth:sanctum');
-Route::delete('/book/{id}', [BookController::class, 'destroy'])->middleware('auth:sanctum');
+    Route::middleware(['auth:sanctum'])->group(function() {
+        Route::get('/logout', [UserController::class, 'logout']);
+        Route::get('/me', [UserController::class, 'me']);
+        
+        Route::get('/books', [BookController::class, 'index']);
+        Route::get('/book/{id}', [BookController::class, 'show'])->middleware([BookMiddleware::class]);
+        Route::post('/book', [BookController::class, 'store']);
+        Route::patch('/book/{id}', [BookController::class, 'update'])->middleware([BookMiddleware::class]);;
+        Route::delete('/book/{id}', [BookController::class, 'destroy'])->middleware([BookMiddleware::class]);;
+    });
+});
 
 
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

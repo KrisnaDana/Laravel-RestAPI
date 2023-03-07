@@ -17,7 +17,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::with('user:id,username')->get(); // no space in with()
+        $current_user = Auth::user();
+        $books = Book::where('user_id', $current_user->id)->with('user:id,username')->get(); // no space in with()
         return BooksResource::collection($books);
     }
 
