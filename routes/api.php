@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\BookController;
-use App\Http\Middleware\BookMiddleware;
+use App\Http\Middleware\Feature\BookMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,8 +26,8 @@ Route::middleware(['throttle:60,1'])->group(function() {
         Route::get('/books', [BookController::class, 'index']);
         Route::get('/book/{id}', [BookController::class, 'show'])->middleware([BookMiddleware::class]);
         Route::post('/book', [BookController::class, 'store']);
-        Route::patch('/book/{id}', [BookController::class, 'update'])->middleware([BookMiddleware::class]);;
-        Route::delete('/book/{id}', [BookController::class, 'destroy'])->middleware([BookMiddleware::class]);;
+        Route::patch('/book/{id}', [BookController::class, 'update'])->middleware([BookMiddleware::class]);
+        Route::delete('/book/{id}', [BookController::class, 'destroy'])->middleware([BookMiddleware::class]);
     });
 });
 
