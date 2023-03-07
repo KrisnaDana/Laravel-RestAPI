@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 
@@ -21,11 +22,15 @@ class UserController extends Controller
                 'username' => ['The provided credentials are incorrect.'],
             ]);
         }
-        return response()->json(["token" => $user->createToken($request->username)->plainTextToken], 200);
+        return response()->json(["user_token" => $user->createToken($request->username)->plainTextToken], 200);
     }
 
     public function logout(Request $request){
         $request->user()->currentAccessToken()->delete();
         return response()->json(["message" => "Successfully logged out"], 200);
+    }
+
+    public function me(Request $request){
+        return response()->json(["user" => Auth::user()], 200);
     }
 }
