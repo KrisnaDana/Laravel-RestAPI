@@ -23,11 +23,15 @@ Route::middleware(['throttle:60,1'])->group(function() {
         Route::get('/logout', [UserController::class, 'logout']);
         Route::get('/me', [UserController::class, 'me']);
         
-        Route::get('/books', [BookController::class, 'index']);
-        Route::get('/book/{id}', [BookController::class, 'show'])->middleware([BookMiddleware::class]);
-        Route::post('/book', [BookController::class, 'store']);
-        Route::patch('/book/{id}', [BookController::class, 'update'])->middleware([BookMiddleware::class]);
-        Route::delete('/book/{id}', [BookController::class, 'destroy'])->middleware([BookMiddleware::class]);
+        Route::middleware(['ability:A'])->group(function() {
+            Route::get('/books', [BookController::class, 'index']);
+            Route::get('/book/{id}', [BookController::class, 'show'])->middleware([BookMiddleware::class]);
+        });
+        Route::middleware(['ability:B'])->group(function() {
+            Route::patch('/book/{id}', [BookController::class, 'update'])->middleware([BookMiddleware::class]);
+            Route::post('/book', [BookController::class, 'store']);
+            Route::delete('/book/{id}', [BookController::class, 'destroy'])->middleware([BookMiddleware::class]);
+        });
     });
 });
 

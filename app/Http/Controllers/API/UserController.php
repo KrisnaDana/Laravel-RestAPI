@@ -22,7 +22,14 @@ class UserController extends Controller
                 'username' => ['The provided credentials are incorrect.'],
             ]);
         }
-        return response()->json(["user_token" => $user->createToken($request->username)->plainTextToken], 200);
+        if($user->role == "A"){
+            $user_ability = "A";
+        }else if($user->role == "B"){
+            $user_ability = "B";
+        }else{
+            $user_ability = "C";
+        }
+        return response()->json(["user_token" => $user->createToken($request->username, [$user_ability])->plainTextToken], 200);
     }
 
     public function logout(Request $request){
