@@ -22,6 +22,11 @@ class UserController extends Controller
                 'username' => ['The provided credentials are incorrect.'],
             ]);
         }
-        return $user->createToken($request->username)->plainTextToken;
+        return response()->json(["token" => $user->createToken($request->username)->plainTextToken], 200);
+    }
+
+    public function logout(Request $request){
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(["message" => "Successfully logged out"], 200);
     }
 }

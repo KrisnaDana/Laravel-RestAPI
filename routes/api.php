@@ -16,10 +16,9 @@ use App\Http\Controllers\API\BookController;
 |
 */
 
-Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
-Route::get('/logout', [UserController::class, 'logout']);
-Route::get('/me', [UserController::class, 'me']);
+Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
+Route::get('/me', [UserController::class, 'me'])->middleware('auth:sanctum');
 
 Route::get('/books', [BookController::class, 'index'])->middleware('auth:sanctum');
 Route::get('/book/{id}', [BookController::class, 'show'])->middleware('auth:sanctum');
